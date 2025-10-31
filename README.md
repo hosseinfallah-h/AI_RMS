@@ -1,4 +1,3 @@
-@"
 # AI_RMS — AI-Assisted Resume Management System
 
 This is a multi-tenant, AI-powered Resume Management System (RMS) built with:
