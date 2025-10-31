@@ -1,0 +1,15 @@
+# Prisma Schema (Planning)
+
+> No finalized models yet — schema will evolve from M1 to M3.
+
+## Planned Models (Preview)
+- Company
+- User
+- JobAd
+- FieldSchema
+- Resume
+- Attachment
+- AuditLog
+
+## Multi-Tenant Design
+Each tenant-bound record includes `companyId` for scoping and indexing.
