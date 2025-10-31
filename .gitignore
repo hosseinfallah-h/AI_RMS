@@ -1,0 +1,27 @@
+@"
+node_modules/
+npm-debug.log
+.env
+.env.local
+.env.*.local
+
+logs
+*.log
+*.pid
+*.seed
+*.tgz
+
+.next/
+dist/
+build/
+
+prisma/migrations/
+
+.DS_Store
+Thumbs.db
+
+.vscode/
+
+tmp/
+cache/
+"@ | Out-File -Encoding UTF8 .gitignore
