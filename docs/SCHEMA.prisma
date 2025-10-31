@@ -1,1 +1,54 @@
-﻿[PASTE_THE_FILE_CONTENT_ABOVE_AS_IS]
+﻿// docs/SCHEMA.prisma
+// Proposal-only draft for M1.1 (Company/User) targeting MongoDB.
+// NOTE: Per ADR-0001 we use Prisma + MongoDB Atlas.
+// - Single database (shared), row-level scoping via companyId.
+// - System-level administrators exist with isSystemAdmin=true and no companyId.
+// - Keep minimal for M1.1 (no soft-delete, no audit models yet).
+// - MongoDB relations are not enforced by the database; Prisma can model references.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+model Company {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  slug      String   @unique
+  domain    String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  displayName   String
+  role          UserRole
+  isSystemAdmin Boolean   @default(false)
+
+  // For tenant users this MUST be set; for system admins this SHOULD be null.
+  companyId     String?   @db.ObjectId
+  company       Company?  @relation(fields: [companyId], references: [id])
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([companyId])
+  @@index([role])
+  @@index([isSystemAdmin])
+}
+
